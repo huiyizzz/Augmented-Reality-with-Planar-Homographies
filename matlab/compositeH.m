@@ -8,11 +8,12 @@ function [ composite_img ] = compositeH( H2to1, template, img )
 H_template_to_img = inv(H2to1);
 
 %% Create mask of same size as template
-
+mask = ones(size(template,1),size(template,2),size(template,3));
 %% Warp mask by appropriate homography
-
+mask = warpH(mask, H_template_to_img, size(img));
 %% Warp template by appropriate homography
-
+template = warpH(template, H_template_to_img, size(img));
 %% Use mask to combine the warped template and the image
-
+composite_img = img;
+composite_img(mask ~= 0) = template(mask ~= 0);
 end

@@ -1,6 +1,5 @@
-function [ locs1, locs2] = matchPics( I1, I2 )
+function [locs1, locs2] = matchPics( I1, I2 )
 %MATCHPICS Extract features, obtain their descriptors, and match them!
-
 %% Convert images to grayscale, if necessary
 gray_I1 = I1;
 gray_I2 = I2;
@@ -20,7 +19,6 @@ points2 = detectFASTFeatures(gray_I2);
 pairs = matchFeatures(desc1, desc2, 'MatchThreshold', 10.0, 'MaxRatio',0.68);
 locs1 = locs1(pairs(:,1),:);
 locs2 = locs2(pairs(:,2),:);
-figure;
-showMatchedFeatures(I1,I2,locs1, locs2, 'montage');
+% figure;
+% showMatchedFeatures(I1, I2, locs1, locs2, 'montage');
 end
-

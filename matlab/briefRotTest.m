@@ -7,50 +7,46 @@ cv_img = imread('../data/cv_cover.jpg');
 if ndims(cv_img) == 3
     cv_img = rgb2gray(cv_img);
 end
-%% Compute the features and descriptors
-points = detectFASTFeatures(cv_img);
-[desc, locs] = computeBrief(cv_img, points.Location);
 %% get matched result
-matches = [];
+matches1 = [];
 for i = 0:36
     %% Rotate image
-    rotated_img = imrotate(cv_img, 10*i);    
-    %% Compute features and descriptors
-    rotated_points = detectFASTFeatures(rotated_img);
-    [rotated_desc, rotated_locs] = computeBrief(rotated_img, rotated_points.Location);
-    %% Match features
-    pairs = matchFeatures(desc, rotated_desc, 'MatchThreshold', 10.0, 'MaxRatio',0.68);
+    rotated_img = imrotate(cv_img, 10*i);
+    %% Extract features and match
+    [locs1, locs2] = matchPics(cv_img, rotated_img);
     if i==3 || i==6 || i==9
-        locs1 = locs(pairs(:,1),:);
-        locs2 = rotated_locs(pairs(:,2),:);
         figure;
         showMatchedFeatures(cv_img,rotated_img, locs1, locs2, 'montage');
     end
     %% Update histogram
-    matches = [matches length(pairs)];
+    matches1 = [matches1 size(locs1,1)];
 end
-
 %% Display histogram
 figure;
-bar(0:10:360, matches);
-
-%% Using another feature detector
+bar(0:10:360, matches1);
+xlabel('Rotation of Degree')
+ylabel('Number of Matched Features')
+title('The Plot of Histogram with BRIEF Descriptor')
+%% Using detectSURFFeatures and extractFeatures
 points = detectSURFFeatures(cv_img);
-[desc, locs] = extractFeatures(cv_img, points.Location, 'Method', 'SURF');
-matches = [];
+[desc1, locs1] = extractFeatures(cv_img, points.Location, 'Method', 'SURF');
+matches2 = [];
 for i = 0:36
     rotated_img = imrotate(cv_img, 10*i);    
     rotated_points = detectSURFFeatures(rotated_img);
-    [rotated_desc, rotated_locs] = extractFeatures(rotated_img, rotated_points.Location, 'Method', 'SURF');
-    pairs = matchFeatures(desc, rotated_desc, 'MatchThreshold', 10.0, 'MaxRatio',0.68);
+    [desc2, locs2] = extractFeatures(rotated_img, rotated_points.Location, 'Method', 'SURF');
+    pairs = matchFeatures(desc1, desc2, 'MatchThreshold', 10.0, 'MaxRatio',0.68);
+    locs1 = locs1(pairs(:,1),:);
+    locs2 = locs2(pairs(:,2),:);
     if i==3 || i==6 || i==9
-        locs1 = locs(pairs(:,1),:);
-        locs2 = rotated_locs(pairs(:,2),:);
         figure;
         showMatchedFeatures(cv_img,rotated_img,locs1, locs2, 'montage');
     end
-    matches = [matches length(pairs)];
+    matches2 = [matches2 size(locs1,1)];
 end
-%%
+%%  Display histogram
 figure;
-bar(0:10:360, matches);
+bar(0:10:360, matches2);
+xlabel('Rotation of Degree')
+ylabel('Number of Matched Features')
+title('The Plot of Histogram with SURF Detector')
