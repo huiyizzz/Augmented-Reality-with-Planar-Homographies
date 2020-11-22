@@ -11,10 +11,10 @@ for iteration = 1:2000
     n = randperm(size(locs1,1),4);
     H = computeH_norm(locs1(n, :), locs2(n, :));
     temp_inliers = zeros(size(locs1,1),1);
-    for i = 1:size(locs1,1)
-        temp = H*[locs1(i,:)'; 1];
+    for i = 1:size(locs2,1)
+        temp = H*[locs2(i,:)'; 1];
         temp = temp/temp(3);
-        distance = sqrt((temp(1)-locs2(i,1))^2+(temp(2)-locs2(i,2))^2);
+        distance = sqrt((temp(1)-locs1(i,1))^2+(temp(2)-locs1(i,2))^2);
         if distance<=threshold
             temp_inliers(i) = 1;
         end   

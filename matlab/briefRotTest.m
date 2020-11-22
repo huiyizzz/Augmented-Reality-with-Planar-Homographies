@@ -27,16 +27,17 @@ bar(0:10:360, matches1);
 xlabel('Rotation of Degree')
 ylabel('Number of Matched Features')
 title('The Plot of Histogram with BRIEF Descriptor')
+
 %% Using detectSURFFeatures and extractFeatures
 points = detectSURFFeatures(cv_img);
-[desc1, locs1] = extractFeatures(cv_img, points.Location, 'Method', 'SURF');
+[desc1, locs] = extractFeatures(cv_img, points.Location, 'Method', 'SURF');
 matches2 = [];
 for i = 0:36
     rotated_img = imrotate(cv_img, 10*i);    
     rotated_points = detectSURFFeatures(rotated_img);
     [desc2, locs2] = extractFeatures(rotated_img, rotated_points.Location, 'Method', 'SURF');
-    pairs = matchFeatures(desc1, desc2, 'MatchThreshold', 10.0, 'MaxRatio',0.68);
-    locs1 = locs1(pairs(:,1),:);
+    pairs = matchFeatures(desc1, desc2, 'MatchThreshold', 10.0, 'MaxRatio',0.7);
+    locs1 = locs(pairs(:,1),:);
     locs2 = locs2(pairs(:,2),:);
     if i==3 || i==6 || i==9
         figure;

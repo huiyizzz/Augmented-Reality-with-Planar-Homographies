@@ -16,7 +16,7 @@ points2 = detectFASTFeatures(gray_I2);
 [desc1, locs1] = computeBrief(gray_I1, points1.Location);
 [desc2, locs2] = computeBrief(gray_I2, points2.Location);
 %% Match features using the descriptors
-pairs = matchFeatures(desc1, desc2, 'MatchThreshold', 10.0, 'MaxRatio',0.68);
+pairs = matchFeatures(desc1, desc2, 'MatchThreshold', 10.0, 'MaxRatio',0.7);
 locs1 = locs1(pairs(:,1),:);
 locs2 = locs2(pairs(:,2),:);
 % figure;
